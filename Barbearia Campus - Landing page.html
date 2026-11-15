@@ -387,6 +387,38 @@ nav.main-links a:hover::after {
   background-color: var(--bg-black);
 }
 
+/* Full-Bleed Cinematic Video Background & Scrim */
+.hero-video-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--bg-black) url("assets/img/img_04_hq.jpg") center center / cover no-repeat;
+}
+
+.hero-video-bg video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  filter: contrast(1.06) saturate(0.95) brightness(0.88);
+  transform: scale(1.01);
+}
+
+.hero-video-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(6, 8, 13, 0.90) 0%, rgba(6, 8, 13, 0.72) 52%, rgba(6, 8, 13, 0.62) 100%),
+    linear-gradient(180deg, rgba(6, 8, 13, 0.78) 0%, rgba(6, 8, 13, 0.28) 45%, rgba(6, 8, 13, 0.94) 100%);
+}
+
 /* Ambient Backing Canvas with Subtle Radial Tint */
 .hero-ambient-glow {
   position: absolute;
@@ -394,7 +426,7 @@ nav.main-links a:hover::after {
   left: -10%;
   width: 55vw;
   height: 55vw;
-  background: radial-gradient(circle, rgba(28, 95, 208, 0.12) 0%, rgba(6, 8, 13, 0) 70%);
+  background: radial-gradient(circle, rgba(28, 95, 208, 0.14) 0%, rgba(6, 8, 13, 0) 70%);
   filter: blur(80px);
   pointer-events: none;
   z-index: 1;
@@ -775,6 +807,159 @@ nav.main-links a:hover::after {
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--text-white);
+}
+
+/* ==========================================================================
+   CINEMATIC SCROLL SECTION — FULL-VIEWPORT EDITORIAL STAGE
+   ========================================================================== */
+.cinematic-scroll-section {
+  position: relative;
+  width: 100%;
+  background-color: var(--bg-black);
+  border-bottom: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+.cinematic-viewport {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 540px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: var(--bg-black) url("assets/img/cinematic_poster.jpg") center center / cover no-repeat;
+}
+
+.cinematic-media-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.cinematic-media-layer video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  filter: contrast(1.05) saturate(0.96);
+}
+
+.cinematic-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(6, 8, 13, 0.72) 0%, rgba(6, 8, 13, 0.18) 38%, rgba(6, 8, 13, 0.42) 68%, rgba(6, 8, 13, 0.92) 100%),
+    linear-gradient(90deg, rgba(6, 8, 13, 0.78) 0%, rgba(6, 8, 13, 0.22) 55%, rgba(6, 8, 13, 0.55) 100%);
+}
+
+.cinematic-overlay-grid {
+  position: relative;
+  z-index: 2;
+  padding-bottom: clamp(48px, 7vh, 88px);
+  padding-top: 110px;
+  width: min(1280px, 100% - 48px);
+  margin-inline: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.cinematic-text-box {
+  max-width: 620px;
+  width: 100%;
+  min-width: 0;
+}
+
+.cinematic-narrative-stack {
+  display: grid;
+  grid-template-areas: "stage";
+  grid-template-columns: minmax(0, 1fr);
+  align-items: end;
+  position: relative;
+  width: 100%;
+}
+
+.cinematic-scene-msg {
+  grid-area: stage;
+  width: 100%;
+  min-width: 0;
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+.cinematic-scene-msg.is-initial {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cinematic-scene-msg .section-heading {
+  font-size: clamp(2.2rem, 4.8vw, 3.8rem);
+  margin-bottom: 14px;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.65);
+}
+
+.cinematic-scene-msg .lead-text {
+  color: #d6deeb;
+  max-width: 48ch;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.7);
+}
+
+.cinematic-hud-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.cinematic-frame-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: rgba(6, 8, 13, 0.78);
+  border: 1px solid var(--border-light);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-cream);
+}
+
+.cinematic-frame-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--campus-blue-light);
+  box-shadow: 0 0 8px var(--campus-blue-light);
+}
+
+.cinematic-progress-track {
+  width: 180px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+  position: relative;
+}
+
+.cinematic-progress-bar {
+  width: 0%;
+  height: 100%;
+  background: var(--campus-red);
+  transform-origin: left center;
 }
 
 /* ==========================================================================
@@ -1204,7 +1389,9 @@ dialog#lb::backdrop {
 
 .chips-selector input[type="radio"] {
   position: absolute;
-  /* opacity: 0; */
+  opacity: 0;
+  appearance: none;
+  -webkit-appearance: none;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -1213,7 +1400,9 @@ dialog#lb::backdrop {
 }
 
 .chips-selector span {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 12px 20px;
   min-height: 48px;
   background: rgba(255, 255, 255, 0.03);
@@ -1222,6 +1411,7 @@ dialog#lb::backdrop {
   font-weight: 500;
   color: var(--text-muted);
   transition: all 0.25s ease;
+  user-select: none;
 }
 
 .chips-selector input[type="radio"]:checked + span {
@@ -1232,9 +1422,104 @@ dialog#lb::backdrop {
   box-shadow: 0 4px 18px var(--campus-blue-glow);
 }
 
+.chips-selector input[type="radio"]:focus-visible + span {
+  outline: 2px solid var(--campus-blue-light);
+  outline-offset: 2px;
+}
+
 .chips-selector input[type="radio"]:hover + span {
   border-color: var(--border-light);
   color: var(--text-white);
+}
+
+.booking-hours-box {
+  margin-top: 28px;
+  background: rgba(11, 15, 23, 0.75);
+  border: 1px solid var(--border-subtle);
+  padding: 22px 24px;
+  display: grid;
+  gap: 14px;
+}
+
+.booking-hours-title {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--campus-blue-light);
+  margin: 0 0 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.booking-hours-title::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--campus-blue-light);
+}
+
+.booking-hours-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 20px;
+}
+
+.booking-hour-item {
+  border-left: 2px solid rgba(255, 255, 255, 0.12);
+  padding-left: 12px;
+}
+
+.booking-hour-item.is-closed {
+  border-left-color: rgba(224, 40, 59, 0.55);
+}
+
+.booking-hour-day {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-cream);
+  margin-bottom: 3px;
+}
+
+.booking-hour-time {
+  font-size: 0.9rem;
+  color: var(--text-white);
+  font-weight: 500;
+}
+
+.booking-hour-item.is-closed .booking-hour-time {
+  color: #f27482;
+}
+
+.period-closed-banner {
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(224, 40, 59, 0.1);
+  border: 1px solid rgba(224, 40, 59, 0.45);
+  color: #f8b4bc;
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.period-day-hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.booking-confirm-disclaimer {
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--campus-blue-light);
+  color: #cfd6e4;
+  font-size: 0.84rem;
+  line-height: 1.55;
 }
 
 .booking-input {
@@ -1487,6 +1772,23 @@ footer.main-footer {
     padding: 125px 0 50px;
     min-height: auto;
   }
+
+  .hero-video-bg {
+    background-position: 48% top;
+    height: 100svh;
+    max-height: 760px;
+  }
+
+  .hero-video-bg video {
+    object-fit: cover;
+    object-position: 48% center;
+    transform: none;
+  }
+
+  .hero-video-overlay {
+    background:
+      linear-gradient(180deg, rgba(6, 8, 13, 0.86) 0%, rgba(6, 8, 13, 0.70) 50%, rgba(6, 8, 13, 1.0) 100%);
+  }
   
   .hero-grid {
     grid-template-columns: 1fr;
@@ -1649,6 +1951,45 @@ footer.main-footer {
     grid-column: span 2;
     grid-row: span 2;
   }
+
+  .cinematic-viewport {
+    background-position: 48% center;
+  }
+
+  .cinematic-media-layer video {
+    object-position: 48% center;
+  }
+
+  .cinematic-overlay-grid {
+    width: 100%;
+    max-width: 100%;
+    padding-inline: 20px;
+    padding-bottom: 36px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .cinematic-scene-msg .section-heading {
+    font-size: clamp(1.85rem, 7.5vw, 2.5rem);
+    line-height: 1.08;
+    margin-bottom: 10px;
+  }
+
+  .cinematic-scene-msg .lead-text {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    max-width: 100%;
+  }
+
+  .cinematic-hud-meta {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .cinematic-progress-track {
+    width: 100%;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1682,6 +2023,10 @@ footer.main-footer {
   .about-features-list {
     grid-template-columns: 1fr;
   }
+
+  .booking-hours-grid {
+    grid-template-columns: 1fr;
+  }
   
   .btn-group {
     flex-direction: column;
@@ -1698,6 +2043,10 @@ footer.main-footer {
     transition: none !important;
     animation: none !important;
     scroll-behavior: auto !important;
+  }
+  .hero-video-bg video,
+  .cinematic-media-layer video {
+    display: none !important;
   }
 }
 
@@ -1756,6 +2105,12 @@ footer.main-footer {
        HERO — THE SOCIAL CUT ASYMMETRIC CINEMATIC EXPERIENCE
        ========================================================================== -->
   <section class="hero-section" id="inicio">
+    <div class="hero-video-bg" aria-hidden="true">
+      <video id="hero-bg-video" autoplay loop muted playsinline preload="auto" poster="assets/img/img_04_hq.jpg" disablePictureInPicture>
+        <source src="hero.mp4" type="video/mp4">
+      </video>
+      <div class="hero-video-overlay"></div>
+    </div>
     <div class="hero-ambient-glow" aria-hidden="true"></div>
 
     <div class="wrap hero-grid">
@@ -1876,6 +2231,72 @@ footer.main-footer {
           <div class="feature-pill">
             <div class="feature-pill-dot"></div>
             <span>Estacionamento e fácil acesso</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       CINEMATIC SCROLL SECTION — FULL-VIEWPORT EDITORIAL EXPERIENCE
+       ========================================================================== -->
+  <section class="cinematic-scroll-section" id="experiencia-cinema" aria-label="Experiência Cinematográfica Barbearia Campus">
+    <div class="cinematic-viewport" id="cinematic-stage">
+      <div class="cinematic-media-layer" aria-hidden="true">
+        <video id="cinematic-scroll-video" muted playsinline preload="auto" poster="assets/img/cinematic_poster.jpg" disablePictureInPicture>
+          <source src="cinematic-scroll-optimized.mp4" type="video/mp4">
+        </video>
+        <div class="cinematic-scrim"></div>
+      </div>
+
+      <div class="cinematic-overlay-grid">
+        <div class="cinematic-text-box">
+          <div class="cinematic-narrative-stack" aria-live="polite">
+            <!-- Cena 01: 0% a 25% -->
+            <div class="cinematic-scene-msg is-initial" data-scene="0">
+              <span class="section-tag">01 / Maestria Campus</span>
+              <h2 class="section-heading">Precisão em <em>cada movimento.</em></h2>
+              <p class="lead-text">
+                Cada passagem da lâmina respeita a anatomia do rosto para construir um degradê limpo e natural.
+              </p>
+            </div>
+
+            <!-- Cena 02: 25% a 50% -->
+            <div class="cinematic-scene-msg" data-scene="1">
+              <span class="section-tag">02 / Visagismo & Corte</span>
+              <h2 class="section-heading">Técnica que <em>transforma.</em></h2>
+              <p class="lead-text">
+                Domínio clássico e contemporâneo unidos para destacar seus melhores traços com equilíbrio.
+              </p>
+            </div>
+
+            <!-- Cena 03: 50% a 75% -->
+            <div class="cinematic-scene-msg" data-scene="2">
+              <span class="section-tag">03 / Acabamento Fino</span>
+              <h2 class="section-heading">Cada detalhe <em>importa.</em></h2>
+              <p class="lead-text">
+                Contornos milimétricos na navalha, textura alinhada e revisão rigorosa de todos os ângulos.
+              </p>
+            </div>
+
+            <!-- Cena 04: 75% a 100% -->
+            <div class="cinematic-scene-msg" data-scene="3">
+              <span class="section-tag">04 / Identidade Campus</span>
+              <h2 class="section-heading">Seu estilo. <em>Nossa assinatura.</em></h2>
+              <p class="lead-text">
+                Mais que um corte: a confiança de sair pronto para qualquer ocasião com o padrão Barbearia Campus.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="cinematic-hud-meta" aria-hidden="true">
+          <div class="cinematic-frame-badge">
+            <span class="dot"></span>
+            <span id="cinematic-status-label">ESTÚDIO CAMPUS • 1080P</span>
+          </div>
+          <div class="cinematic-progress-track">
+            <div class="cinematic-progress-bar" id="cinematic-progress-bar"></div>
           </div>
         </div>
       </div>
@@ -2084,45 +2505,77 @@ footer.main-footer {
     <div class="wrap booking-grid">
       <div class="rv">
         <span class="section-tag">Agilidade & Respeito ao seu Tempo</span>
-        <h2 class="section-heading">Reserve seu horário <em>direto pelo WhatsApp</em></h2>
+        <h2 class="section-heading">Solicite seu horário <em>direto pelo WhatsApp</em></h2>
         <p class="lead-text">
-          Selecione o serviço, o dia e o melhor horário para você. Não exigimos senhas, downloads de aplicativos nem cadastros burocráticos.
+          Escolha seu barbeiro, o serviço, a data e o período de sua preferência. Sem senhas, aplicativos ou cadastros burocráticos.
         </p>
 
+        <div class="booking-hours-box" aria-label="Horários de Funcionamento">
+          <h3 class="booking-hours-title">Horários de Funcionamento</h3>
+          <div class="booking-hours-grid">
+            <div class="booking-hour-item">
+              <div class="booking-hour-day">Segunda a Quinta</div>
+              <div class="booking-hour-time">9h às 12h | 14h às 19h30</div>
+            </div>
+            <div class="booking-hour-item">
+              <div class="booking-hour-day">Sexta</div>
+              <div class="booking-hour-time">9h às 17h30</div>
+            </div>
+            <div class="booking-hour-item is-closed">
+              <div class="booking-hour-day">Sábado</div>
+              <div class="booking-hour-time">Fechado</div>
+            </div>
+            <div class="booking-hour-item">
+              <div class="booking-hour-day">Domingo</div>
+              <div class="booking-hour-time">9h às 14h</div>
+            </div>
+          </div>
+        </div>
+
         <div class="booking-editorial-note">
-          <strong>Aviso Importante:</strong>
-          O envio do formulário direciona sua solicitação com os dados organizados ao WhatsApp da equipe Campus. O horário estará oficialmente confirmado assim que retornarmos.
+          <strong>Aviso de Confirmação:</strong>
+          Este formulário é uma solicitação de agendamento. A reserva só estará confirmada após o retorno do barbeiro pelo WhatsApp.
         </div>
       </div>
 
       <div class="booking-card-form">
-        <form id="f" novalidate>
+        <form id="f" novalidate style="display:grid; gap:24px;">
           <div class="form-field-group">
-            <span class="form-field-label">1. Escolha o Serviço</span>
+            <span class="form-field-label">1. Escolha seu Barbeiro</span>
+            <div class="chips-selector" id="barbers"></div>
+          </div>
+
+          <div class="form-field-group">
+            <span class="form-field-label">2. Escolha o Serviço</span>
             <div class="chips-selector" id="svcs"></div>
           </div>
 
           <div class="form-field-group">
-            <label class="form-field-label" for="date">2. Data Desejada</label>
+            <label class="form-field-label" for="date">3. Data de Preferência</label>
             <input class="booking-input" type="date" id="date" required>
           </div>
 
           <div class="form-field-group">
-            <span class="form-field-label">3. Horário Preferido</span>
+            <span class="form-field-label">4. Período de Preferência</span>
             <div class="chips-selector" id="times"></div>
+            <div class="period-day-hint" id="period-hint">Funcionamento de segunda a quinta: 9h às 12h | 14h às 19h30</div>
           </div>
 
           <div class="form-field-group">
-            <label class="form-field-label" for="nome">4. Seu Nome Completo</label>
-            <input class="booking-input" type="text" id="nome" placeholder="Como podemos te chamar?" autocomplete="given-name" maxlength="60" required>
+            <label class="form-field-label" for="nome">5. Seu Nome Completo</label>
+            <input class="booking-input" type="text" id="nome" placeholder="Como podemos te chamar?" autocomplete="name" maxlength="60" required>
           </div>
 
-          <p class="status-message warn" id="err" role="alert" style="display:none"></p>
+          <div class="booking-confirm-disclaimer">
+            Este formulário é uma solicitação de agendamento. A reserva só estará confirmada após o retorno do barbeiro pelo WhatsApp.
+          </div>
+
+          <p class="status-message warn" id="err" role="alert" style="display:none; margin:0;"></p>
 
           <div class="summary-preview" id="sum" aria-live="polite"></div>
 
           <button class="btn btn-primary" type="submit" style="width:100%; min-height:56px;">
-            Solicitar Horário no WhatsApp
+            SOLICITAR PELO WHATSAPP
             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
           </button>
 
@@ -2228,22 +2681,63 @@ footer.main-footer {
    CONFIGURAÇÃO & LÓGICA DE AGENDAMENTO (PRESERVADA E OTIMIZADA)
    ========================================================================== */
 var CFG = {
-  whatsapp: "",
+  barbeiros: [
+    { nome: "Tavares", whatsapp: "5519999983761" },
+    { nome: "Gleidson", whatsapp: "5519998638760" },
+    { nome: "Diego", whatsapp: "5519996385012" }
+  ],
   servicos: ["Corte", "Barba", "Corte e barba"],
-  horarios: ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"],
+  periodosPorDia: {
+    padrao: [
+      { label: "Manhã: 9h às 12h", value: "Manhã: 9h às 12h" },
+      { label: "Tarde: 14h às 19h30", value: "Tarde: 14h às 19h30" }
+    ],
+    sexta: [
+      { label: "Manhã (9h às 17h30)", value: "Manhã (Funcionamento: 9h às 17h30)" },
+      { label: "Tarde (9h às 17h30)", value: "Tarde (Funcionamento: 9h às 17h30)" }
+    ],
+    domingo: [
+      { label: "Manhã: 9h às 14h", value: "Manhã: 9h às 14h" }
+    ]
+  },
   endereco: "",
-  horario: "",
+  horario: "Seg a Qui: 9h às 12h e 14h às 19h30 | Sex: 9h às 17h30 | Sáb: Fechado | Dom: 9h às 14h",
   instagram: ""
 };
 
 (function() {
   var $ = function(s) { return document.querySelector(s); };
   var $$ = function(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
-  var st = { s: "", t: "" };
+  var st = { b: "", bw: "", s: "", t: "" };
   var p2 = function(n) { return String(n).padStart(2, "0"); };
 
-  /* Renderização de chips de seleção */
+  /* Renderização de chips de Barbeiros */
+  var barbersBox = $("#barbers");
+  if (barbersBox) {
+    CFG.barbeiros.forEach(function(item) {
+      var l = document.createElement("label");
+      var r = document.createElement("input");
+      var s = document.createElement("span");
+      r.type = "radio";
+      r.name = "barbeiro";
+      r.value = item.nome;
+      r.dataset.wa = item.whatsapp;
+      s.textContent = item.nome;
+      r.addEventListener("change", function() {
+        st.b = item.nome;
+        st.bw = item.whatsapp;
+        if ($("#err")) $("#err").style.display = "none";
+        sum();
+      });
+      l.appendChild(r);
+      l.appendChild(s);
+      barbersBox.appendChild(l);
+    });
+  }
+
+  /* Renderização de chips de Serviços */
   function chips(box, list, name, key) {
+    if (!box) return;
     list.forEach(function(v) {
       var l = document.createElement("label");
       var r = document.createElement("input");
@@ -2254,6 +2748,7 @@ var CFG = {
       s.textContent = v;
       r.addEventListener("change", function() {
         st[key] = v;
+        if ($("#err")) $("#err").style.display = "none";
         sum();
       });
       l.appendChild(r);
@@ -2263,11 +2758,92 @@ var CFG = {
   }
 
   chips($("#svcs"), CFG.servicos, "svc", "s");
-  chips($("#times"), CFG.horarios, "hr", "t");
 
   var d = new Date();
-  $("#date").min = d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate());
+  var todayStr = d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate());
+  $("#date").min = todayStr;
   $("#yr").textContent = d.getFullYear();
+
+  function parseLocalDate(v) {
+    if (!v) return null;
+    var a = v.split("-");
+    if (a.length !== 3) return null;
+    return new Date(+a[0], +a[1] - 1, +a[2]);
+  }
+
+  function isPastDate(v) {
+    var x = parseLocalDate(v);
+    if (!x) return false;
+    var h = new Date();
+    h.setHours(0, 0, 0, 0);
+    return x < h;
+  }
+
+  function isSaturday(v) {
+    var x = parseLocalDate(v);
+    if (!x) return false;
+    return x.getDay() === 6;
+  }
+
+  /* Renderiza os períodos compatíveis com o dia da semana selecionado */
+  function renderPeriodOptions() {
+    var box = $("#times");
+    var hint = $("#period-hint");
+    var dateVal = $("#date").value;
+    if (!box) return;
+    box.innerHTML = "";
+
+    var x = parseLocalDate(dateVal);
+    var day = x ? x.getDay() : -1;
+
+    if (day === 6) {
+      st.t = "";
+      var closedMsg = document.createElement("div");
+      closedMsg.className = "period-closed-banner";
+      closedMsg.textContent = "Fechado — data indisponível aos sábados. Por favor, escolha outro dia da semana.";
+      box.appendChild(closedMsg);
+      if (hint) hint.textContent = "Sábado: Fechado — data indisponível";
+      return;
+    }
+
+    var list = CFG.periodosPorDia.padrao;
+    if (day === 5) {
+      list = CFG.periodosPorDia.sexta;
+      if (hint) hint.textContent = "Sexta-feira — Funcionamento: 9h às 17h30 (escolha manhã ou tarde)";
+    } else if (day === 0) {
+      list = CFG.periodosPorDia.domingo;
+      if (hint) hint.textContent = "Domingo — Funcionamento exclusivo pela manhã: 9h às 14h";
+    } else if (day >= 1 && day <= 4) {
+      list = CFG.periodosPorDia.padrao;
+      if (hint) hint.textContent = "Segunda a quinta — Manhã: 9h às 12h | Tarde: 14h às 19h30";
+    } else {
+      if (hint) hint.textContent = "Seg a Qui: 9h às 12h | 14h às 19h30 • Sex: 9h às 17h30 • Dom: 9h às 14h";
+    }
+
+    var stillValid = list.some(function(item) { return item.value === st.t; });
+    if (!stillValid) {
+      st.t = "";
+    }
+
+    list.forEach(function(item) {
+      var l = document.createElement("label");
+      var r = document.createElement("input");
+      var s = document.createElement("span");
+      r.type = "radio";
+      r.name = "hr";
+      r.value = item.value;
+      if (st.t === item.value) r.checked = true;
+      s.textContent = item.label;
+      r.addEventListener("change", function() {
+        st.t = item.value;
+        if ($("#err")) $("#err").style.display = "none";
+        sum();
+      });
+      l.appendChild(r);
+      l.appendChild(s);
+      box.appendChild(l);
+    });
+  }
 
   function fd(v) {
     if (!v) return "";
@@ -2277,19 +2853,49 @@ var CFG = {
   }
 
   function msg() {
-    return "Olá, Barbearia Campus! Gostaria de solicitar um agendamento:\n  • Serviço: " + (st.s || "-") +
-           "\n  • Data: " + (fd($("#date").value) || "-") +
-           "\n  • Horário: " + (st.t || "-") +
-           "\n  • Nome: " + ($("#nome").value.trim() || "-") +
-           "\n\nEntendo que o horário será confirmado pela equipe Campus.";
+    return "Olá, " + (st.b || "[BARBEIRO]") + "!\n" +
+           "Gostaria de solicitar um agendamento na Barbearia Campus.\n\n" +
+           "Nome: " + ($("#nome").value.trim() || "[NOME]") + "\n" +
+           "Serviço: " + (st.s || "[SERVIÇO]") + "\n" +
+           "Data desejada: " + (fd($("#date").value) || "[DATA]") + "\n" +
+           "Período de preferência: " + (st.t || "[PERÍODO]") + "\n\n" +
+           "Poderia confirmar a disponibilidade?\n\n" +
+           "Obrigado!";
   }
 
   function sum() {
     $("#sum").textContent = msg();
   }
+
+  renderPeriodOptions();
   sum();
 
-  $("#date").addEventListener("change", sum);
+  function handleDateChange() {
+    var v = $("#date").value;
+    var er = $("#err");
+    var ok = $("#ok");
+    if (ok) ok.style.display = "none";
+
+    renderPeriodOptions();
+
+    if (v && isPastDate(v)) {
+      if (er) {
+        er.style.display = "block";
+        er.textContent = "Não é permitido selecionar datas anteriores à data atual.";
+      }
+    } else if (v && isSaturday(v)) {
+      if (er) {
+        er.style.display = "block";
+        er.textContent = "Sábado: Fechado — data indisponível. Por favor, selecione uma data de segunda a sexta ou domingo.";
+      }
+    } else {
+      if (er) er.style.display = "none";
+    }
+    sum();
+  }
+
+  $("#date").addEventListener("change", handleDateChange);
+  $("#date").addEventListener("input", handleDateChange);
   $("#nome").addEventListener("input", sum);
 
   /* Ativação por cliques em botões de serviços da página */
@@ -2307,39 +2913,39 @@ var CFG = {
   /* Envio seguro do formulário */
   $("#f").addEventListener("submit", function(e) {
     e.preventDefault();
-    var m = [];
-    if (!st.s) m.push("o serviço");
-    if (!$("#date").value) m.push("a data");
-    if (!st.t) m.push("o horário");
-    if (!$("#nome").value.trim()) m.push("seu nome");
-
     var er = $("#err"), ok = $("#ok");
     ok.className = "status-message";
     ok.style.display = "none";
 
+    var dateVal = $("#date").value;
+    if (dateVal && isPastDate(dateVal)) {
+      er.style.display = "block";
+      er.textContent = "Não é permitido selecionar datas anteriores à data atual.";
+      return;
+    }
+
+    if (dateVal && isSaturday(dateVal)) {
+      er.style.display = "block";
+      er.textContent = "Sábado: Fechado — data indisponível. Por favor, selecione outra data.";
+      return;
+    }
+
+    var m = [];
+    if (!st.b || !st.bw) m.push("seu barbeiro");
+    if (!st.s) m.push("o serviço");
+    if (!dateVal) m.push("a data de preferência");
+    if (!st.t) m.push("o período de preferência");
+    if (!$("#nome").value.trim()) m.push("seu nome completo");
+
     if (m.length) {
       er.style.display = "block";
-      er.textContent = "Por favor, selecione: " + m.join(", ") + ".";
+      er.textContent = "Por favor, preencha: " + m.join(", ") + ".";
       return;
     }
 
-    var s = new Date($("#date").value + "T00:00:00"), h = new Date();
-    h.setHours(0, 0, 0, 0);
-    if (s < h) {
-      er.style.display = "block";
-      er.textContent = "Escolha uma data a partir de hoje.";
-      return;
-    }
     er.style.display = "none";
 
-    var n = (CFG.whatsapp || "").replace(/\D/g, "");
-    if (n.length < 10) {
-      ok.className = "status-message on warn";
-      ok.style.display = "block";
-      ok.textContent = "Envio bloqueado: o número oficial de WhatsApp da Campus ainda não foi configurado. Os dados acima estão prontos para envio assim que o número for informado.";
-      return;
-    }
-
+    var n = (st.bw || "").replace(/\D/g, "");
     var u = "https://wa.me/" + n + "?text=" + encodeURIComponent(msg());
     var a = document.createElement("a");
     a.href = u;
@@ -2351,14 +2957,13 @@ var CFG = {
 
     ok.className = "status-message on";
     ok.style.display = "block";
-    ok.innerHTML = "Pedido pronto para envio. Se o WhatsApp não abriu automaticamente, <a href=\"" + u + "\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:underline;\">toque aqui para abrir</a>.";
+    ok.innerHTML = "Solicitação direcionada para <strong>" + st.b + "</strong>. Se o WhatsApp não abriu automaticamente, <a href=\"" + u + "\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:underline;\">toque aqui para abrir</a>.";
   });
 
   /* Injeção de Contatos Dinâmicos */
   if (CFG.endereco) $("#c-end").innerHTML = CFG.endereco + " • <a href=\"https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(CFG.endereco) + "\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:underline;\">Abrir no mapa</a>";
   if (CFG.horario) $("#c-hor").textContent = CFG.horario;
   if (CFG.instagram) $("#c-ig").innerHTML = "<a href=\"https://instagram.com/" + encodeURIComponent(CFG.instagram.replace("@", "")) + "\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:underline;\">" + CFG.instagram + "</a>";
-  if ((CFG.whatsapp || "").replace(/\D/g, "").length >= 10) $("#c-wa").innerHTML = "<a href=\"https://wa.me/" + CFG.whatsapp.replace(/\D/g, "") + "\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:underline;\">Chamar no WhatsApp</a>";
 
   /* Menu Mobile & Scroll Interativo do Header */
   var btnMenu = $("#btn-menu"), nav = $("#menu"), hd = $("#hd"), lastY = 0, ticking = false;
@@ -2410,6 +3015,32 @@ var CFG = {
     if (Math.abs(dx) > 50) showLb(cur + (dx < 0 ? 1 : -1));
   }, { passive: true });
 
+  /* Inicialização segura e resiliente do Vídeo Background no Hero */
+  var heroVid = $("#hero-bg-video");
+  if (heroVid) {
+    heroVid.muted = true;
+    heroVid.defaultMuted = true;
+    heroVid.playsInline = true;
+    var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) {
+      heroVid.pause();
+    } else {
+      var tryPlayHero = function() {
+        var p = heroVid.play();
+        if (p && typeof p.catch === "function") {
+          p.catch(function() {
+            /* Autoplay bloqueado por economia de bateria/política: mantém poster estático e aguarda 1ª interação */
+          });
+        }
+      };
+      tryPlayHero();
+      window.addEventListener("touchstart", function onFirstTouch() {
+        if (heroVid.paused && !prefersReduced) tryPlayHero();
+        window.removeEventListener("touchstart", onFirstTouch);
+      }, { passive: true });
+    }
+  }
+
   /* ==========================================================================
      GSAP CINEMATIC TIMELINE & SCROLLTRIGGER
      ========================================================================== */
@@ -2418,9 +3049,186 @@ var CFG = {
     gsap.defaults({ ease: "power3.out", duration: 1.0 });
 
     var isReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var cineVid = $("#cinematic-scroll-video");
+    var cineBar = $("#cinematic-progress-bar");
+    var cineStage = $("#cinematic-stage");
+    var cineScenes = $$(".cinematic-scene-msg");
+
+    /* Função determinística para atualizar as 4 cenas narrativas pelo progresso (0 a 1) */
+    var updateCinematicNarrative = function(p) {
+      if (!cineScenes || !cineScenes.length) return;
+      var ranges = [
+        { start: 0.00, end: 0.25 },
+        { start: 0.25, end: 0.50 },
+        { start: 0.50, end: 0.75 },
+        { start: 0.75, end: 1.00 }
+      ];
+      var fadeWindow = 0.04;
+
+      for (var i = 0; i < cineScenes.length; i++) {
+        var el = cineScenes[i];
+        var r = ranges[i];
+        if (!r) continue;
+
+        var alpha = 0;
+        var yOffset = 0;
+
+        if (p >= r.start && p <= r.end) {
+          if (i > 0 && p < r.start + fadeWindow) {
+            var tIn = (p - r.start) / fadeWindow;
+            alpha = Math.max(0, Math.min(1, tIn));
+            yOffset = (1 - alpha) * 14;
+          } else if (i < 3 && p > r.end - fadeWindow) {
+            var tOut = (r.end - p) / fadeWindow;
+            alpha = Math.max(0, Math.min(1, tOut));
+            yOffset = -(1 - alpha) * 14;
+          } else {
+            alpha = 1;
+            yOffset = 0;
+          }
+        }
+
+        el.style.opacity = alpha.toFixed(3);
+        el.style.transform = "translate3d(0, " + yOffset.toFixed(1) + "px, 0)";
+        el.style.pointerEvents = alpha > 0.5 ? "auto" : "none";
+      }
+    };
+
+    if (cineVid) {
+      cineVid.muted = true;
+      cineVid.defaultMuted = true;
+      cineVid.playsInline = true;
+      cineVid.pause();
+    }
+
     if (!isReduced) {
 
-      /* Hero Opening Sequence — Hollywood Editorial Level */
+      /* 1. Motor Cinematic Scroll (#experiencia-cinema / #cinematic-stage) */
+      if (cineVid && cineStage) {
+        var cineStInstance = null;
+        var cineDuration = 0;
+        var targetTime = 0;
+        var lastAppliedTime = -1;
+        var seekScheduled = false;
+        var videoFailed = false;
+
+        var applyPendingSeek = function() {
+          seekScheduled = false;
+          if (videoFailed || !cineDuration) return;
+          if (cineVid.seeking) {
+            seekScheduled = true;
+            requestAnimationFrame(applyPendingSeek);
+            return;
+          }
+          var clamped = Math.max(0.001, Math.min(cineDuration - 0.04, targetTime));
+          if (Math.abs(clamped - lastAppliedTime) > 0.015) {
+            try {
+              cineVid.currentTime = clamped;
+              lastAppliedTime = clamped;
+            } catch (err) {
+              /* Ignora exceções transitórias de seek se o buffer ainda estiver parcial */
+            }
+          }
+        };
+
+        var requestVideoSeek = function(newTime) {
+          targetTime = newTime;
+          if (!seekScheduled) {
+            seekScheduled = true;
+            requestAnimationFrame(applyPendingSeek);
+          }
+        };
+
+        var initCinematicScrollTrigger = function() {
+          if (cineStInstance || videoFailed) return;
+          var dur = cineVid.duration;
+          if (!dur || !isFinite(dur) || dur <= 0) return;
+          cineDuration = dur;
+
+          cineStInstance = ScrollTrigger.create({
+            id: "cinematicScroll",
+            trigger: "#cinematic-stage",
+            start: "top top",
+            end: "+=600%",
+            pin: true,
+            scrub: 0.4,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onUpdate: function(self) {
+              var p = self.progress;
+              if (cineBar) {
+                cineBar.style.width = (p * 100).toFixed(2) + "%";
+              }
+              updateCinematicNarrative(p);
+              if (!videoFailed && cineDuration > 0) {
+                requestVideoSeek(p * (cineDuration - 0.04));
+              }
+            }
+          });
+
+          ScrollTrigger.refresh();
+          var initP = cineStInstance ? cineStInstance.progress : 0;
+          updateCinematicNarrative(initP);
+          if (cineBar) {
+            cineBar.style.width = (initP * 100).toFixed(2) + "%";
+          }
+          try {
+            cineVid.pause();
+            cineVid.currentTime = Math.max(0.001, initP * (cineDuration - 0.04));
+          } catch (e) {}
+        };
+
+        /* Tratamento de falhas de rede ou decodificação: desativa pin para não prender o visitante */
+        var handleVideoFailure = function() {
+          videoFailed = true;
+          if (cineVid) {
+            cineVid.style.display = "none";
+          }
+          if (cineStInstance) {
+            cineStInstance.kill();
+            cineStInstance = null;
+            ScrollTrigger.refresh();
+          }
+        };
+
+        cineVid.addEventListener("error", handleVideoFailure);
+        var sourceEl = cineVid.querySelector("source");
+        if (sourceEl) {
+          sourceEl.addEventListener("error", handleVideoFailure);
+        }
+
+        /* Inicialização condicionada estritamente ao loadedmetadata */
+        if (cineVid.readyState >= 1 && cineVid.duration > 0 && isFinite(cineVid.duration)) {
+          initCinematicScrollTrigger();
+        } else {
+          cineVid.addEventListener("loadedmetadata", initCinematicScrollTrigger, { once: true });
+        }
+
+        /* Desbloqueio silencioso de decodificação de frames para iOS Safari no 1º toque */
+        var iosUnlocked = false;
+        window.addEventListener("touchstart", function unlockCineIos() {
+          if (!iosUnlocked && cineVid && !videoFailed) {
+            iosUnlocked = true;
+            var p = cineVid.play();
+            if (p && typeof p.then === "function") {
+              p.then(function() {
+                cineVid.pause();
+              }).catch(function() {});
+            } else {
+              cineVid.pause();
+            }
+          }
+        }, { passive: true, once: true });
+
+        /* Recálculo seguro em mudança de orientação mobile */
+        window.addEventListener("orientationchange", function() {
+          setTimeout(function() {
+            ScrollTrigger.refresh();
+          }, 250);
+        });
+      }
+
+      /* 2. Hero Opening Sequence — Hollywood Editorial Level */
       var heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       heroTl
@@ -2434,7 +3242,7 @@ var CFG = {
         .from(".hero-inset-card", { opacity: 0, y: 30, duration: 0.8 }, 0.8)
         .from(".hero-stamp-badge", { scale: 0, rotation: -30, opacity: 0, duration: 0.7, ease: "back.out(1.5)" }, 0.95);
 
-      /* Scroll Revelations elegantes via fromTo */
+      /* 3. Scroll Revelations elegantes via fromTo */
       ScrollTrigger.batch(".rv", {
         start: "top 90%",
         once: true,
@@ -2443,7 +3251,7 @@ var CFG = {
         }
       });
 
-      /* Services Reveal */
+      /* 4. Services Reveal */
       ScrollTrigger.batch(".service-card", {
         start: "top 92%",
         once: true,
@@ -2452,7 +3260,7 @@ var CFG = {
         }
       });
 
-      /* Gallery Items Reveal */
+      /* 5. Gallery Items Reveal */
       ScrollTrigger.batch(".gallery-item", {
         start: "top 94%",
         once: true,
@@ -2461,7 +3269,7 @@ var CFG = {
         }
       });
 
-      /* Architectural Space Images */
+      /* 6. Architectural Space Images */
       ScrollTrigger.batch(".space-photo-box", {
         start: "top 94%",
         once: true,
@@ -2470,7 +3278,7 @@ var CFG = {
         }
       });
 
-      /* Subtle Desktop Parallax */
+      /* 7. Subtle Desktop Parallax */
       if (window.innerWidth >= 861) {
         gsap.to(".hero-main-card img", {
           yPercent: 12,
