@@ -2290,16 +2290,6 @@ footer.main-footer {
             </div>
           </div>
         </div>
-
-        <div class="cinematic-hud-meta" aria-hidden="true">
-          <div class="cinematic-frame-badge">
-            <span class="dot"></span>
-            <span id="cinematic-status-label">ESTÚDIO CAMPUS • 1080P</span>
-          </div>
-          <div class="cinematic-progress-track">
-            <div class="cinematic-progress-bar" id="cinematic-progress-bar"></div>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -3130,27 +3120,29 @@ var CFG = {
         var cineStInstance = null;
         var cineDuration = 0;
         var targetTime = 0;
+        var smoothedTime = 0;
         var lastAppliedTime = -1;
         var isDecoderBusy = false;
         var hasPendingSeek = false;
         var seekWatchdog = null;
+        var smoothTickerActive = false;
         var videoFailed = false;
-        var blobPreloaded = false;
         var FRAME_STEP = 1 / 30;
+        /* Velocidade máxima de avanço do vídeo por frame de tela (~0.045s por tick), impedindo movimentos acelerados */
+        var MAX_STEP_PER_TICK = 0.045;
 
-        var flushSeekQueue = function() {
+        var flushSeekQueue = function(timeToApply) {
           if (videoFailed || !cineDuration) return;
           if (isDecoderBusy) {
             hasPendingSeek = true;
             return;
           }
 
-          var clamped = Math.max(0.001, Math.min(cineDuration - 0.04, targetTime));
-          /* Quantização ao grid real de 30fps para evitar seeks redundantes no mesmo quadro */
+          var clamped = Math.max(0.001, Math.min(cineDuration - 0.04, timeToApply));
           var snapped = Math.round(clamped / FRAME_STEP) * FRAME_STEP;
           snapped = Math.max(0.001, Math.min(cineDuration - 0.04, snapped));
 
-          if (Math.abs(snapped - lastAppliedTime) < 0.028) {
+          if (Math.abs(snapped - lastAppliedTime) < 0.03) {
             hasPendingSeek = false;
             return;
           }
@@ -3163,19 +3155,38 @@ var CFG = {
           seekWatchdog = setTimeout(function() {
             if (isDecoderBusy) {
               isDecoderBusy = false;
-              if (hasPendingSeek) flushSeekQueue();
+              if (hasPendingSeek) flushSeekQueue(smoothedTime);
             }
           }, 90);
 
           try {
-            if (typeof cineVid.fastSeek === "function" && Math.abs(snapped - cineVid.currentTime) > 0.35) {
-              cineVid.fastSeek(snapped);
-            } else {
-              cineVid.currentTime = snapped;
-            }
+            cineVid.currentTime = snapped;
           } catch (err) {
             isDecoderBusy = false;
           }
+        };
+
+        var tickSmoothVideo = function() {
+          if (videoFailed || !cineDuration) {
+            smoothTickerActive = false;
+            return;
+          }
+          var diff = targetTime - smoothedTime;
+          if (Math.abs(diff) < 0.015) {
+            smoothedTime = targetTime;
+            flushSeekQueue(smoothedTime);
+            smoothTickerActive = false;
+            return;
+          }
+
+          /* Amortecimento suave + limite máximo de velocidade para que os movimentos do barbeiro nunca fiquem rápidos demais */
+          var step = diff * 0.09;
+          if (step > MAX_STEP_PER_TICK) step = MAX_STEP_PER_TICK;
+          if (step < -MAX_STEP_PER_TICK) step = -MAX_STEP_PER_TICK;
+          smoothedTime += step;
+
+          flushSeekQueue(smoothedTime);
+          requestAnimationFrame(tickSmoothVideo);
         };
 
         cineVid.addEventListener("seeked", function() {
@@ -3184,43 +3195,19 @@ var CFG = {
             seekWatchdog = null;
           }
           isDecoderBusy = false;
-          if (hasPendingSeek) {
-            requestAnimationFrame(flushSeekQueue);
+          if (hasPendingSeek && !smoothTickerActive) {
+            requestAnimationFrame(function() {
+              flushSeekQueue(smoothedTime);
+            });
           }
         });
 
         var requestVideoSeek = function(newTime) {
           targetTime = newTime;
-          flushSeekQueue();
-        };
-
-        /* Pré-carregamento assíncrono em Blob RAM para eliminar HTTP Range Requests durante o scroll */
-        var preloadVideoIntoMemory = function() {
-          if (blobPreloaded || videoFailed || !window.fetch || !window.URL || !URL.createObjectURL) return;
-          blobPreloaded = true;
-          fetch("cinematic-scroll-optimized.mp4", { cache: "force-cache" })
-            .then(function(res) {
-              if (!res.ok) throw new Error("HTTP " + res.status);
-              return res.blob();
-            })
-            .then(function(blob) {
-              if (videoFailed || !blob || blob.size < 100000) return;
-              var blobUrl = URL.createObjectURL(blob);
-              var savedTime = lastAppliedTime > 0 ? lastAppliedTime : (cineVid.currentTime || 0.001);
-              cineVid.src = blobUrl;
-              cineVid.load();
-              cineVid.addEventListener("loadedmetadata", function onBlobMeta() {
-                cineDuration = cineVid.duration || cineDuration;
-                isDecoderBusy = false;
-                try {
-                  cineVid.pause();
-                  cineVid.currentTime = Math.max(0.001, savedTime);
-                } catch (e) {}
-              }, { once: true });
-            })
-            .catch(function() {
-              /* Mantém reprodução via stream normal se o fetch em background não completar */
-            });
+          if (!smoothTickerActive) {
+            smoothTickerActive = true;
+            requestAnimationFrame(tickSmoothVideo);
+          }
         };
 
         var initCinematicScrollTrigger = function() {
@@ -3233,11 +3220,10 @@ var CFG = {
             id: "cinematicScroll",
             trigger: "#cinematic-stage",
             start: "top top",
-            end: "+=420%",
+            end: "+=900%",
             pin: true,
-            scrub: 0.15,
+            scrub: 1.2,
             anticipatePin: 1,
-            fastScrollEnd: true,
             invalidateOnRefresh: true,
             onUpdate: function(self) {
               var p = self.progress;
@@ -3257,18 +3243,13 @@ var CFG = {
           if (cineBar) {
             cineBar.style.width = (initP * 100).toFixed(2) + "%";
           }
+          var initTime = Math.max(0.001, initP * (cineDuration - 0.04));
+          targetTime = initTime;
+          smoothedTime = initTime;
           try {
             cineVid.pause();
-            cineVid.currentTime = Math.max(0.001, initP * (cineDuration - 0.04));
+            cineVid.currentTime = initTime;
           } catch (e) {}
-
-          if (document.readyState === "complete") {
-            setTimeout(preloadVideoIntoMemory, 300);
-          } else {
-            window.addEventListener("load", function() {
-              setTimeout(preloadVideoIntoMemory, 300);
-            }, { once: true });
-          }
         };
 
         /* Tratamento de falhas de rede ou decodificação: desativa pin para não prender o visitante */
