@@ -847,7 +847,10 @@ nav.main-links a:hover::after {
   object-fit: cover;
   object-position: center center;
   display: block;
-  filter: contrast(1.05) saturate(0.96);
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: contents;
 }
 
 .cinematic-scrim {
@@ -928,10 +931,8 @@ nav.main-links a:hover::after {
   align-items: center;
   gap: 10px;
   padding: 8px 14px;
-  background: rgba(6, 8, 13, 0.78);
+  background: rgba(6, 8, 13, 0.9);
   border: 1px solid var(--border-light);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.18em;
@@ -2981,9 +2982,13 @@ var CFG = {
     }
   });
 
+  var isHeaderScrolled = false;
   window.addEventListener("scroll", function() {
-    var y = window.scrollY;
-    hd.classList.toggle("scrolled", y > 20);
+    var shouldScroll = window.scrollY > 20;
+    if (shouldScroll !== isHeaderScrolled) {
+      isHeaderScrolled = shouldScroll;
+      hd.classList.toggle("scrolled", shouldScroll);
+    }
   }, { passive: true });
 
   /* Lightbox Editorial para a Galeria */
@@ -3038,6 +3043,23 @@ var CFG = {
         if (heroVid.paused && !prefersReduced) tryPlayHero();
         window.removeEventListener("touchstart", onFirstTouch);
       }, { passive: true });
+
+      /* Pausa o vídeo do Hero quando sai da viewport para liberar o decodificador de hardware para o Cinematic Scroll */
+      if ("IntersectionObserver" in window) {
+        var heroSectionEl = $("#inicio");
+        if (heroSectionEl) {
+          var heroObs = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                if (heroVid.paused && !prefersReduced) tryPlayHero();
+              } else {
+                if (!heroVid.paused) heroVid.pause();
+              }
+            });
+          }, { threshold: 0.05 });
+          heroObs.observe(heroSectionEl);
+        }
+      }
     }
   }
 
@@ -3109,34 +3131,96 @@ var CFG = {
         var cineDuration = 0;
         var targetTime = 0;
         var lastAppliedTime = -1;
-        var seekScheduled = false;
+        var isDecoderBusy = false;
+        var hasPendingSeek = false;
+        var seekWatchdog = null;
         var videoFailed = false;
+        var blobPreloaded = false;
+        var FRAME_STEP = 1 / 30;
 
-        var applyPendingSeek = function() {
-          seekScheduled = false;
+        var flushSeekQueue = function() {
           if (videoFailed || !cineDuration) return;
-          if (cineVid.seeking) {
-            seekScheduled = true;
-            requestAnimationFrame(applyPendingSeek);
+          if (isDecoderBusy) {
+            hasPendingSeek = true;
             return;
           }
+
           var clamped = Math.max(0.001, Math.min(cineDuration - 0.04, targetTime));
-          if (Math.abs(clamped - lastAppliedTime) > 0.015) {
-            try {
-              cineVid.currentTime = clamped;
-              lastAppliedTime = clamped;
-            } catch (err) {
-              /* Ignora exceções transitórias de seek se o buffer ainda estiver parcial */
+          /* Quantização ao grid real de 30fps para evitar seeks redundantes no mesmo quadro */
+          var snapped = Math.round(clamped / FRAME_STEP) * FRAME_STEP;
+          snapped = Math.max(0.001, Math.min(cineDuration - 0.04, snapped));
+
+          if (Math.abs(snapped - lastAppliedTime) < 0.028) {
+            hasPendingSeek = false;
+            return;
+          }
+
+          isDecoderBusy = true;
+          hasPendingSeek = false;
+          lastAppliedTime = snapped;
+
+          if (seekWatchdog) clearTimeout(seekWatchdog);
+          seekWatchdog = setTimeout(function() {
+            if (isDecoderBusy) {
+              isDecoderBusy = false;
+              if (hasPendingSeek) flushSeekQueue();
             }
+          }, 90);
+
+          try {
+            if (typeof cineVid.fastSeek === "function" && Math.abs(snapped - cineVid.currentTime) > 0.35) {
+              cineVid.fastSeek(snapped);
+            } else {
+              cineVid.currentTime = snapped;
+            }
+          } catch (err) {
+            isDecoderBusy = false;
           }
         };
 
+        cineVid.addEventListener("seeked", function() {
+          if (seekWatchdog) {
+            clearTimeout(seekWatchdog);
+            seekWatchdog = null;
+          }
+          isDecoderBusy = false;
+          if (hasPendingSeek) {
+            requestAnimationFrame(flushSeekQueue);
+          }
+        });
+
         var requestVideoSeek = function(newTime) {
           targetTime = newTime;
-          if (!seekScheduled) {
-            seekScheduled = true;
-            requestAnimationFrame(applyPendingSeek);
-          }
+          flushSeekQueue();
+        };
+
+        /* Pré-carregamento assíncrono em Blob RAM para eliminar HTTP Range Requests durante o scroll */
+        var preloadVideoIntoMemory = function() {
+          if (blobPreloaded || videoFailed || !window.fetch || !window.URL || !URL.createObjectURL) return;
+          blobPreloaded = true;
+          fetch("cinematic-scroll-optimized.mp4", { cache: "force-cache" })
+            .then(function(res) {
+              if (!res.ok) throw new Error("HTTP " + res.status);
+              return res.blob();
+            })
+            .then(function(blob) {
+              if (videoFailed || !blob || blob.size < 100000) return;
+              var blobUrl = URL.createObjectURL(blob);
+              var savedTime = lastAppliedTime > 0 ? lastAppliedTime : (cineVid.currentTime || 0.001);
+              cineVid.src = blobUrl;
+              cineVid.load();
+              cineVid.addEventListener("loadedmetadata", function onBlobMeta() {
+                cineDuration = cineVid.duration || cineDuration;
+                isDecoderBusy = false;
+                try {
+                  cineVid.pause();
+                  cineVid.currentTime = Math.max(0.001, savedTime);
+                } catch (e) {}
+              }, { once: true });
+            })
+            .catch(function() {
+              /* Mantém reprodução via stream normal se o fetch em background não completar */
+            });
         };
 
         var initCinematicScrollTrigger = function() {
@@ -3149,10 +3233,11 @@ var CFG = {
             id: "cinematicScroll",
             trigger: "#cinematic-stage",
             start: "top top",
-            end: "+=600%",
+            end: "+=420%",
             pin: true,
-            scrub: 0.4,
+            scrub: 0.15,
             anticipatePin: 1,
+            fastScrollEnd: true,
             invalidateOnRefresh: true,
             onUpdate: function(self) {
               var p = self.progress;
@@ -3176,6 +3261,14 @@ var CFG = {
             cineVid.pause();
             cineVid.currentTime = Math.max(0.001, initP * (cineDuration - 0.04));
           } catch (e) {}
+
+          if (document.readyState === "complete") {
+            setTimeout(preloadVideoIntoMemory, 300);
+          } else {
+            window.addEventListener("load", function() {
+              setTimeout(preloadVideoIntoMemory, 300);
+            }, { once: true });
+          }
         };
 
         /* Tratamento de falhas de rede ou decodificação: desativa pin para não prender o visitante */
