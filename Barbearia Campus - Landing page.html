@@ -1835,8 +1835,26 @@ footer.main-footer {
     width: 100%;
   }
   
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
   .nav-actions .btn-primary {
-    display: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    background: var(--campus-blue);
+    color: #ffffff;
+    box-shadow: 0 4px 14px var(--campus-blue-glow);
+    white-space: nowrap;
   }
   
   nav.main-links {
@@ -2067,6 +2085,53 @@ footer.main-footer {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   MOBILE FLOATING BOOKING BUTTON — QUICK ACCESS ANYWHERE ON PAGE
+   ========================================================================== */
+.mobile-floating-booking-btn {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .mobile-floating-booking-btn {
+    display: inline-flex;
+    position: fixed;
+    bottom: max(18px, env(safe-area-inset-bottom, 18px));
+    right: 18px;
+    z-index: 990;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--campus-blue);
+    color: #ffffff;
+    font-family: var(--font-sans);
+    font-size: 0.84rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 16px var(--campus-blue-glow);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 0.25s ease, opacity 0.25s ease, background-color 0.2s ease;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    text-decoration: none;
+  }
+
+  .mobile-floating-booking-btn:active {
+    transform: scale(0.96);
+    background: var(--campus-blue-light);
+  }
+
+  .mobile-floating-booking-btn.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(24px);
   }
 }
 </style>
@@ -2622,6 +2687,12 @@ footer.main-footer {
   </section>
 </main>
 
+<!-- Botão Flutuante de Agendamento Mobile (Acesso Rápido sem rolar toda a página) -->
+<a class="mobile-floating-booking-btn" id="mobile-floating-btn" href="#agendamento" aria-label="Agendar Horário na Barbearia Campus">
+  <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  <span>Agendar Horário</span>
+</a>
+
 <!-- Lightbox Modal Component -->
 <dialog id="lb" aria-label="Visualizador de fotos em alta resolução">
   <div class="lbx">
@@ -2982,6 +3053,20 @@ var CFG = {
       hd.classList.toggle("scrolled", shouldScroll);
     }
   }, { passive: true });
+
+  /* Controle do Botão Flutuante de Agendamento no Mobile */
+  var floatBtn = $("#mobile-floating-btn");
+  if (floatBtn && "IntersectionObserver" in window) {
+    var bookingSec = $("#agendamento");
+    if (bookingSec) {
+      var bookingObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          floatBtn.classList.toggle("is-hidden", entry.isIntersecting);
+        });
+      }, { threshold: 0.08 });
+      bookingObs.observe(bookingSec);
+    }
+  }
 
   /* Lightbox Editorial para a Galeria */
   var dlg = $("#lb"), li = $("#lbi"), its = $$("[data-lb]"), cur = 0, touchStartX = 0;
