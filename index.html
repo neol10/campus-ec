@@ -1825,23 +1825,10 @@ footer.main-footer {
   .nav-actions {
     display: flex;
     align-items: center;
-    gap: 10px;
   }
 
   .nav-actions .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 14px;
-    font-size: 0.76rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    border-radius: 4px;
-    background: var(--campus-blue);
-    color: #ffffff;
-    box-shadow: 0 4px 14px var(--campus-blue-glow);
-    white-space: nowrap;
+    display: none !important;
   }
   
   nav.main-links {
@@ -3196,9 +3183,9 @@ var CFG = {
             id: "cinematicScroll",
             trigger: "#cinematic-stage",
             start: "top top",
-            end: "+=280%",
+            end: "+=650%",
             pin: true,
-            scrub: 0.25,
+            scrub: 0.6,
             anticipatePin: 1,
             invalidateOnRefresh: true,
             onUpdate: function(self) {
