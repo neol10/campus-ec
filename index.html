@@ -1396,56 +1396,64 @@ dialog#lb::backdrop {
 }
 
 /* ==========================================================================
-   BOOKING SECTION — HIGH-CONVERSION WHATSAPP SCHEDULING (PRESERVED LOGIC)
+   BOOKING SECTION — REFORMULAÇÃO AGENDAMENTO EXPRESS (STREET BARBER)
    ========================================================================== */
 .booking-section {
-  padding: clamp(80px, 10vw, 140px) 0;
+  padding: clamp(70px, 8vw, 120px) 0;
   background: var(--street-black);
   position: relative;
   border-top: 1px solid var(--street-border);
   border-bottom: 1px solid var(--street-border);
 }
 
-.booking-grid {
-  display: grid;
-  grid-template-columns: 0.85fr 1.15fr;
-  gap: clamp(40px, 6vw, 90px);
-  align-items: start;
+.booking-express-container {
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-.booking-editorial-note {
-  margin-top: 32px;
-  padding: 20px 24px;
-  background: var(--street-black-surface);
-  border: 1px solid var(--street-border);
-  border-left: 3px solid var(--street-red);
-  color: #B3B3B3;
-  font-size: 0.92rem;
-  line-height: 1.6;
+.booking-express-header {
+  text-align: center;
+  margin-bottom: clamp(28px, 4vw, 40px);
 }
 
-.booking-editorial-note strong {
-  color: var(--street-white);
-  display: block;
-  margin-bottom: 4px;
+.booking-express-header .street-section-tag {
+  display: inline-flex;
+  margin-bottom: 12px;
+}
+
+.booking-express-title {
+  font-family: var(--font-street-sans);
+  font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+  font-weight: 800;
+  line-height: 0.95;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.78rem;
+  letter-spacing: -0.01em;
+  color: var(--street-white);
+  margin: 0 0 10px 0;
+}
+
+.booking-express-subtitle {
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  color: #B3B3B3;
+  margin: 0 auto;
+  max-width: 440px;
+  line-height: 1.5;
 }
 
 .booking-card-form {
   background: var(--street-black-surface);
   border: 1px solid var(--street-border);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
-  padding: clamp(28px, 5vw, 44px);
+  padding: clamp(24px, 4vw, 40px);
   display: grid;
-  gap: 28px;
+  gap: 24px;
   border-radius: 2px;
 }
 
 .form-field-group {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .form-field-label {
@@ -1456,6 +1464,19 @@ dialog#lb::backdrop {
   text-transform: uppercase;
   color: var(--street-offwhite);
   display: block;
+}
+
+.booking-fields-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 580px) {
+  .booking-fields-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 }
 
 .chips-selector {
@@ -1497,59 +1518,128 @@ dialog#lb::backdrop {
   user-select: none;
 }
 
+/* Destaque Dourado para chips ativos */
 .chips-selector input[type="radio"]:checked + span {
-  background: var(--street-white);
-  border-color: var(--street-white);
-  color: var(--street-black);
+  background: #D4AF37;
+  border-color: #D4AF37;
+  color: #0A0A0A;
   font-weight: 700;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.28);
 }
 
 .chips-selector input[type="radio"]:focus-visible + span {
-  outline: 2px solid var(--street-white);
+  outline: 2px solid #D4AF37;
   outline-offset: 2px;
 }
 
 .chips-selector input[type="radio"]:hover + span {
-  border-color: var(--street-white);
+  border-color: #D4AF37;
   color: var(--street-white);
 }
 
-.booking-hours-box {
-  margin-top: 28px;
-  background: var(--street-black-surface);
+.booking-input {
+  width: 100%;
+  min-height: 52px;
+  background: var(--street-black);
+  border: 1px solid var(--street-border);
+  color: var(--street-white);
+  padding: 0 16px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  border-radius: 2px;
+  transition: border-color 0.25s ease;
+}
+
+.booking-input:focus {
+  border-color: #D4AF37;
+  outline: none;
+}
+
+.period-closed-banner {
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(217, 31, 60, 0.1);
+  border: 1px solid rgba(217, 31, 60, 0.45);
+  color: #f8b4bc;
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.period-day-hint {
+  font-size: 0.76rem;
+  color: var(--street-gray);
+  margin-top: 2px;
+}
+
+/* Horários de funcionamento colapsáveis */
+.booking-hours-details {
+  background: var(--street-black);
   border: 1px solid var(--street-border);
   border-radius: 2px;
-  padding: 22px 24px;
-  display: grid;
-  gap: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
 }
 
-.booking-hours-title {
-  font-family: var(--font-street-sans);
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--street-gray);
-  margin: 0 0 4px 0;
+.booking-hours-details[open] {
+  border-color: rgba(212, 175, 55, 0.35);
+}
+
+.booking-hours-summary {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  padding: 13px 18px;
+  cursor: pointer;
+  user-select: none;
+  font-family: var(--font-street-sans);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--street-gray);
+  transition: color 0.2s ease;
+  list-style: none;
 }
 
-.booking-hours-title::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--street-red);
+.booking-hours-summary::-webkit-details-marker {
+  display: none;
+}
+
+.booking-hours-summary:hover {
+  color: var(--street-offwhite);
+}
+
+.booking-hours-summary::after {
+  content: "+";
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1;
+  color: #D4AF37;
+  transition: transform 0.2s ease;
+}
+
+.booking-hours-details[open] .booking-hours-summary::after {
+  content: "−";
+}
+
+.booking-hours-body {
+  padding: 0 18px 16px 18px;
+  border-top: 1px solid var(--street-border);
 }
 
 .booking-hours-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 14px 20px;
+  gap: 12px 18px;
+  padding-top: 14px;
+}
+
+@media (max-width: 520px) {
+  .booking-hours-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
 }
 
 .booking-hour-item {
@@ -1568,12 +1658,12 @@ dialog#lb::backdrop {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--street-offwhite);
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 .booking-hour-time {
   font-family: var(--font-street-sans);
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   color: #B3B3B3;
   font-weight: 500;
 }
@@ -1582,60 +1672,74 @@ dialog#lb::backdrop {
   color: #f27482;
 }
 
-.period-closed-banner {
+/* Aviso de Confirmação Breve */
+.booking-confirm-brief {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: #999999;
+  line-height: 1.4;
+  padding: 2px 0;
+}
+
+.booking-confirm-brief-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #D4AF37;
+  flex-shrink: 0;
+}
+
+/* Resumo da mensagem oculto para o usuário, mas presente no DOM para o script */
+.booking-summary-hidden {
+  display: none !important;
+}
+
+/* Botão de Agendamento Dourado Street Barber */
+.btn-booking-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   width: 100%;
-  padding: 14px 18px;
-  background: rgba(217, 31, 60, 0.1);
-  border: 1px solid rgba(217, 31, 60, 0.45);
-  color: #f8b4bc;
-  font-size: 0.88rem;
-  font-weight: 500;
-  line-height: 1.5;
+  min-height: 56px;
+  padding: 16px 28px;
+  background-color: #D4AF37;
+  color: #0A0A0A;
+  border: 1px solid #D4AF37;
+  border-radius: 0;
+  font-family: var(--font-street-sans);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
-.period-day-hint {
-  font-size: 0.78rem;
-  color: var(--street-gray);
-  margin-top: 4px;
+.btn-booking-gold:hover {
+  background-color: #B8962E;
+  border-color: #B8962E;
+  color: #0A0A0A;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
 }
 
-.booking-confirm-disclaimer {
-  padding: 14px 16px;
-  background: var(--street-black-elevated);
-  border: 1px solid var(--street-border);
-  border-left: 3px solid var(--street-red);
-  color: #B3B3B3;
-  font-size: 0.84rem;
-  line-height: 1.55;
-  border-radius: 2px;
+.btn-booking-gold:active {
+  transform: translateY(0);
 }
 
-.booking-input {
-  width: 100%;
-  min-height: 52px;
-  background: var(--street-black);
-  border: 1px solid var(--street-border);
-  color: var(--street-white);
-  padding: 0 18px;
-  font-family: inherit;
-  font-size: 0.95rem;
-  border-radius: 2px;
-  transition: border-color 0.25s ease;
+.btn-booking-gold .btn-icon {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
 }
 
-.booking-input:focus {
-  border-color: var(--street-white);
-  outline: none;
-}
-
-.summary-preview {
-  font-size: 0.88rem;
-  color: #B3B3B3;
-  border-top: 1px solid var(--street-border);
-  padding-top: 20px;
-  white-space: pre-line;
-  line-height: 1.6;
-  font-family: monospace;
+.btn-booking-gold:hover .btn-icon {
+  transform: translateX(3px);
 }
 
 .status-message {
@@ -2801,84 +2905,88 @@ footer.main-footer {
   </section>
 
   <!-- ==========================================================================
-       BOOKING SECTION — HIGH CONVERSION WHATSAPP RESERVATION
+       BOOKING SECTION — REFORMULAÇÃO AGENDAMENTO EXPRESS (STREET BARBER)
        ========================================================================== -->
   <section class="booking-section" id="agendamento">
-    <div class="wrap booking-grid">
-      <div class="rv">
-        <span class="section-tag">Agilidade & Respeito ao seu Tempo</span>
-        <h2 class="section-heading">Solicite seu horário <em>direto pelo WhatsApp</em></h2>
-        <p class="lead-text">
-          Escolha o barbeiro, o serviço e o melhor período. Rápido, direto e sem cadastro.
+    <div class="wrap booking-express-container">
+      <div class="booking-express-header rv">
+        <span class="street-section-tag">Agilidade &amp; Atendimento Direto</span>
+        <h2 class="booking-express-title">AGENDE SEU CORTE.</h2>
+        <p class="booking-express-subtitle">
+          Escolha suas preferências e envie pelo WhatsApp.
         </p>
-
-        <div class="booking-hours-box" aria-label="Horários de Funcionamento">
-          <h3 class="booking-hours-title">Horários de Funcionamento</h3>
-          <div class="booking-hours-grid">
-            <div class="booking-hour-item">
-              <div class="booking-hour-day">Segunda a Quinta</div>
-              <div class="booking-hour-time">9h às 12h | 14h às 19h30</div>
-            </div>
-            <div class="booking-hour-item">
-              <div class="booking-hour-day">Sexta</div>
-              <div class="booking-hour-time">9h às 17h30</div>
-            </div>
-            <div class="booking-hour-item is-closed">
-              <div class="booking-hour-day">Sábado</div>
-              <div class="booking-hour-time">Fechado</div>
-            </div>
-            <div class="booking-hour-item">
-              <div class="booking-hour-day">Domingo</div>
-              <div class="booking-hour-time">9h às 14h</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="booking-editorial-note">
-          <strong>Aviso de Confirmação:</strong>
-          Este formulário é uma solicitação de agendamento. A reserva só estará confirmada após o retorno do barbeiro pelo WhatsApp.
-        </div>
       </div>
 
-      <div class="booking-card-form">
-        <form id="f" novalidate style="display:grid; gap:24px;">
+      <div class="booking-card-form booking-express-card">
+        <form id="f" novalidate style="display:grid; gap:22px;">
           <div class="form-field-group">
-            <span class="form-field-label">1. Escolha seu Barbeiro</span>
+            <span class="form-field-label">01 — BARBEIRO</span>
             <div class="chips-selector" id="barbers"></div>
           </div>
 
           <div class="form-field-group">
-            <span class="form-field-label">2. Escolha o Serviço</span>
+            <span class="form-field-label">02 — SERVIÇO</span>
             <div class="chips-selector" id="svcs"></div>
           </div>
 
-          <div class="form-field-group">
-            <label class="form-field-label" for="date">3. Data de Preferência</label>
-            <input class="booking-input" type="date" id="date" required>
+          <div class="booking-fields-row">
+            <div class="form-field-group">
+              <label class="form-field-label" for="date">03 — DATA</label>
+              <input class="booking-input" type="date" id="date" required>
+            </div>
+
+            <div class="form-field-group">
+              <label class="form-field-label" for="nome">04 — SEU NOME</label>
+              <input class="booking-input" type="text" id="nome" placeholder="Como podemos te chamar?" autocomplete="name" maxlength="60" required>
+            </div>
           </div>
 
           <div class="form-field-group">
-            <span class="form-field-label">4. Período de Preferência</span>
+            <span class="form-field-label">05 — PERÍODO</span>
             <div class="chips-selector" id="times"></div>
-            <div class="period-day-hint" id="period-hint">Funcionamento de segunda a quinta: 9h às 12h | 14h às 19h30</div>
-          </div>
-
-          <div class="form-field-group">
-            <label class="form-field-label" for="nome">5. Seu Nome Completo</label>
-            <input class="booking-input" type="text" id="nome" placeholder="Como podemos te chamar?" autocomplete="name" maxlength="60" required>
-          </div>
-
-          <div class="booking-confirm-disclaimer">
-            Este formulário é uma solicitação de agendamento. A reserva só estará confirmada após o retorno do barbeiro pelo WhatsApp.
+            <div class="period-day-hint" id="period-hint">Seg a Qui: 9h às 12h | 14h às 19h30 • Sex: 9h às 17h30 • Dom: 9h às 14h</div>
           </div>
 
           <p class="status-message warn" id="err" role="alert" style="display:none; margin:0;"></p>
 
-          <div class="summary-preview" id="sum" aria-live="polite"></div>
+          <!-- Horários colapsáveis para economia de espaço mobile -->
+          <details class="booking-hours-details">
+            <summary class="booking-hours-summary">VER HORÁRIOS DE FUNCIONAMENTO</summary>
+            <div class="booking-hours-body">
+              <div class="booking-hours-grid">
+                <div class="booking-hour-item">
+                  <div class="booking-hour-day">Segunda a Quinta</div>
+                  <div class="booking-hour-time">9h às 12h | 14h às 19h30</div>
+                </div>
+                <div class="booking-hour-item">
+                  <div class="booking-hour-day">Sexta</div>
+                  <div class="booking-hour-time">9h às 17h30</div>
+                </div>
+                <div class="booking-hour-item is-closed">
+                  <div class="booking-hour-day">Sábado</div>
+                  <div class="booking-hour-time">Fechado</div>
+                </div>
+                <div class="booking-hour-item">
+                  <div class="booking-hour-day">Domingo</div>
+                  <div class="booking-hour-time">9h às 14h</div>
+                </div>
+              </div>
+            </div>
+          </details>
 
-          <button class="btn btn-primary" type="submit" style="width:100%; min-height:56px;">
+          <!-- Aviso breve de confirmação em 1 linha -->
+          <div class="booking-confirm-brief">
+            <span class="booking-confirm-brief-dot"></span>
+            <span>A disponibilidade será confirmada pelo barbeiro no WhatsApp.</span>
+          </div>
+
+          <!-- Preview da mensagem oculta visualmente, preservada para JS -->
+          <div class="summary-preview booking-summary-hidden" id="sum" aria-live="polite"></div>
+
+          <!-- Botão Dourado de Envio -->
+          <button class="btn-booking-gold" type="submit">
             SOLICITAR PELO WHATSAPP
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
           </button>
 
           <div class="status-message" id="ok" role="status"></div>

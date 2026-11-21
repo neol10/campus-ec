@@ -27,7 +27,8 @@
 | **Etapa 6** | Responsividade, Animações & Refinamento | `APROVADA` | Polimento mobile (320px a 768px), remoção do CTA redundante do topo mobile, calibração da velocidade do Cinematic Scroll (`end: +=900%` mobile / `+=1100%` desktop), erradicação do azul legado e fix do favicon.ico. |
 | **Ajustes Pontuais** | Hero Mobile + CTAs Dourados + Desobstrução CTA Flutuante | `APROVADA` | Rebalanceamento vertical do Hero mobile; botões dourados sólidos (`#D4AF37`) nos três serviços; desobstrução do botão flutuante em `#servicos` e `#agendamento`. |
 | **Hero Mobile 2.0** | Refinamento Visual Tipográfico e Hierarquia Editorial | `APROVADA` | Hierarquia editorial: `CORTE` e `ATITUDE` em branco sólido Barlow 800; `IDENTIDADE.` em Vermelho Street (`#D91F3C`); overlay direcional localizado. |
-| **Alinhamento do Hero** | Calibração do Recuo Horizontal do Container do Hero | `CONCLUIDO` (Aguardando Aprovação) | Ajuste exclusivo em `.hero-street-container`: Desktop (>= 1024px) com 48px a 64px; Tablet (768px a 1023px) com 32px a 40px; Mobile (até 767px) com 20px a 24px. Alinhamento rigoroso entre etiqueta, título, subtítulo e CTAs. Zero quebra ou overflow. |
+| **Alinhamento do Hero** | Calibração do Recuo Horizontal do Container do Hero | `APROVADA` | Ajuste exclusivo em `.hero-street-container`: Desktop (>= 1024px) com 48px a 64px; Tablet (768px a 1023px) com 32px a 40px; Mobile (até 767px) com 20px a 24px. Alinhamento rigoroso entre etiqueta, título, subtítulo e CTAs. |
+| **Agendamento Express** | Reformulação Compacta, Mobile First & CTAs Dourados | `CONCLUIDO` | Layout centralizado compacto em card único (max 680px), headline "AGENDE SEU CORTE." (Barlow 800), chips ativos com destaque dourado (#D4AF37), horários em `<details>` colapsável, confirmação em 1 linha, preview visual oculto, botão CTA dourado sólido, 100% das regras e WhatsApp mantidos. |
 | **Etapa 7** | Auditoria Final e Publicação | `PLANEJADA` | Checklist final de regressão, métricas de performance, SEO, acessibilidade e publicação. |
 
 ---
@@ -47,4 +48,4 @@
 ---
 
 ## 4. Próximo Passo
-Aguardar aprovação explícita do usuário do **Alinhamento Horizontal do Hero** para iniciar a **Etapa 7: Auditoria Final e Publicação**.
+Aguardar aprovação explícita do usuário da **Reformulação — Agendamento Express** para prosseguir com os próximos passos ou com a **Etapa 7: Auditoria Final e Publicação**.
